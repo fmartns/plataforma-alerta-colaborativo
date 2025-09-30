@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "plataforma-alerta-colaborativo"
+version = "0.1.0"
+description = ""
+authors = ["Filipe <fmartns66@gmail.com>"]
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.11"
+django = "^5.2.6"
+djangorestframework = "^3.16.1"
+django-filter = "^25.1"
+markdown = "^3.9"
+python-dotenv = "^1.1.1"
+drf-spectacular = {extras = ["sidecar"], version = "^0.28.0"}
+djangorestframework-simplejwt = "^5.5.1"
+pillow = "^11.3.0"
+psycopg2-binary = "^2.9.10"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -1,0 +1,56 @@
+name: Code Quality
+
+on:
+  push:
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: [ "main", "develop" ]
+
+jobs:
+  lint-and-typecheck:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install Poetry
+        uses: abatilo/actions-poetry@v3
+        with:
+          poetry-version: "1.8.3"
+
+      - name: Configure Poetry (no virtualenv outside)
+        run: poetry config virtualenvs.in-project true
+
+      - name: Cache Poetry
+        uses: actions/cache@v4
+        with:
+          path: |
+            .venv
+            ~/.cache/pypoetry
+          key: ${{ runner.os }}-py${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-py${{ steps.setup-python.outputs.python-version }}-
+
+      - name: Install deps
+        run: poetry install --no-interaction --no-root
+
+      - name: Black (check)
+        run: poetry run black --check .
+
+      - name: Ruff (check)
+        run: poetry run ruff check .
+
+      - name: Flake8 (core, health)
+        run: poetry run flake8 core health
+
+      - name: Flake8 (repo inteiro)
+        run: poetry run flake8 .
+
+      - name: Pyright
+        run: poetry run pyright
